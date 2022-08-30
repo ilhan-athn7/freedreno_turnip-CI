@@ -1,0 +1,29 @@
+name: Build turnip
+
+on:
+  schedule:
+  - cron: "30 12 1,15 * *"
+
+jobs:
+  build_turnip:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Install deps
+      run: |
+         sudo apt-get install -y meson ninja-build zip
+         sudo apt-get remove -y meson
+         sudo pip install meson
+    
+    - name: Run build script
+      run: bash ./turnip_builder.sh 
+      
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: turnip_workdir/turnip.zip
+        tag_name: workflow_${{github.run_number}}
+        name: Release ${{github.run_number}}
