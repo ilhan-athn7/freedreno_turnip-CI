@@ -1,10 +1,8 @@
 name: Build turnip
 
 on:
-  push:
-    branches: [ "main" ]
-#  schedule:
-#  - cron: "30 12 1,15 * *"
+  schedule:
+  - cron: "30 12 1,15 * *"
 
 jobs:
   build_turnip:
