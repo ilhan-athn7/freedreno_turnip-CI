@@ -1,8 +1,10 @@
 name: Build turnip
 
 on:
-  schedule:
-  - cron: "30 12 1,15 * *"
+  push:
+    branches: [ "main" ]
+#  schedule:
+#  - cron: "30 12 1,15 * *"
 
 jobs:
   build_turnip:
@@ -14,7 +16,7 @@ jobs:
     
     - name: Install deps
       run: |
-         sudo apt-get install -y meson ninja-build zip
+         sudo apt-get install -y ninja-build zip
          sudo apt-get remove -y meson
          sudo pip install meson
     
