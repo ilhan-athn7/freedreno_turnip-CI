@@ -99,8 +99,8 @@ fi
 
 
 echo "Prepare magisk module structure ..." $'\n'
-p1="system/vendor"
-mkdir -p $magiskdir/$p1/lib64/hw
+p1="system/vendor/lib64/hw"
+mkdir -p $magiskdir/$p1
 cd $magiskdir
 
 
@@ -155,13 +155,13 @@ EOF
 
 
 cat <<EOF >"customize.sh"
-set_perm \$MODPATH/$p1/lib64/hw/vulkan.adreno.so 0 0 0644
+set_perm \$MODPATH/$p1/vulkan.adreno.so 0 0 0644
 EOF
 
 
 
 echo "Copy necessary files from work directory ..." $'\n'
-cp $workdir/vulkan.adreno.so $magiskdir/$p1/lib64/hw/
+cp $workdir/vulkan.adreno.so $magiskdir/$p1
 
 
 
