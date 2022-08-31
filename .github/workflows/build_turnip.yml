@@ -15,7 +15,7 @@ jobs:
     
     - name: Install deps
       run: |
-         sudo apt-get install -y ninja-build zip ccache
+         sudo apt-get install -y ninja-build zip ccache gcc bison
          sudo apt-get remove -y meson
          sudo pip install meson
     
