@@ -15,7 +15,7 @@ jobs:
     
     - name: Install deps
       run: |
-         sudo apt-get remove -y gcc
+         sudo apt-get remove -y gcc g++
          sudo apt-get install -y ninja-build ccache gcc-12 g++-12
          sudo pip install meson
     
