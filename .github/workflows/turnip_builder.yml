@@ -1,9 +1,8 @@
 name: Build turnip
 
 on:
-  workflow_dispatch:
   schedule:
-  - cron: "30 12 1,15 * *"
+  - cron: "0 13 1,15 * *"
 
 jobs:
   build_turnip:
