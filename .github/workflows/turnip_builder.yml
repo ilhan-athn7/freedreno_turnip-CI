@@ -1,26 +1,34 @@
-name: Build turnip
+name: Build "turnip"
 
 on:
+  workflow_dispatch:
   schedule:
-  - cron: "0 13 1,15 * *"
+  - cron: "20 5 1,15 * *"
 
 jobs:
-  build_turnip:
-
+  start_building_turnip:
     runs-on: ubuntu-22.04
-
     steps:
     - uses: actions/checkout@v3
-    
-    - name: Install deps
+
+    - name: Prepare environment
       run: |
-        sudo apt-get install -y ninja-build ccache
-        sudo pip install meson
+        sudo sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list
+        sudo apt update && sudo apt upgrade
+        sudo apt build-dep mesa -y
     
-    - name: Run build script
-      run: bash ./turnip_builder.sh 
+    - name: Execute build script
+      run: bash ./turnip_builder.sh
+
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v3.1.0
+      with:
+        name: Upload meson and ninja logs for debugging
+        path: |
+          turnip_workdir/ninja_log
+          turnip_workdir/mesa-main/build-android-aarch64/meson-logs/meson-log.txt
       
-    - name: Release
+    - name: Release "turnip"
       uses: softprops/action-gh-release@v1
       with:
         body: Turnip magisk module
@@ -28,5 +36,3 @@ jobs:
         name: Release ${{github.run_number}}
         files: |
            turnip_workdir/turnip.zip
-#          turnip_workdir/meson_log
-#          turnip_workdir/ninja_log
