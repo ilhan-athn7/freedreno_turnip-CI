@@ -5,6 +5,7 @@ nocolor='\033[0m'
 deps="meson ninja patchelf unzip curl pip flex bison zip"
 workdir="$(pwd)/turnip_workdir"
 magiskdir="$workdir/turnip_module"
+ndkver="android-ndk-r25c"
 clear
 
 
@@ -38,10 +39,10 @@ mkdir -p $workdir && cd $workdir
 
 
 echo "Downloading android-ndk from google server (~506 MB) ..." $'\n'
-curl https://dl.google.com/android/repository/android-ndk-r25b-linux.zip --output android-ndk-r25b-linux.zip &> /dev/null
+curl https://dl.google.com/android/repository/"$ndkver"-linux.zip --output "$ndkver"-linux.zip &> /dev/null
 ###
 echo "Exracting android-ndk to a folder ..." $'\n'
-unzip android-ndk-r25b-linux.zip  &> /dev/null
+unzip "$ndkver"-linux.zip  &> /dev/null
 
 
 
@@ -55,7 +56,7 @@ cd mesa-main
 
 
 echo "Creating meson cross file ..." $'\n'
-ndk="$workdir/android-ndk-r25b/toolchains/llvm/prebuilt/linux-x86_64/bin"
+ndk="$workdir/$ndkver/toolchains/llvm/prebuilt/linux-x86_64/bin"
 cat <<EOF >"android-aarch64"
 [binaries]
 ar = '$ndk/llvm-ar'
