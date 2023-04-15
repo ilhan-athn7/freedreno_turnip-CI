@@ -6,6 +6,7 @@ In this repository, you will find a shell script to build freedreno/turnip drive
 ### Notes;
 - Apps and games in magisk hidelist/denylist will not able to access turnip driver
 - Make sure you are not using SkiaVK.
+- Turnip is compatible with these apps/games listed [here](list.md).
 
 ### How to build locally?
 - Pick up the [turnip_builder.sh](https://raw.githubusercontent.com/ilhan-athn7/freedreno_turnip-CI/main/turnip_builder.sh)
