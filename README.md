@@ -1,18 +1,17 @@
-In this repository, you will find a shell script to build freedreno/turnip driver for android as a magisk module.
+This is a bash script to build freedreno/turnip for android as a magisk module.
 
 ### Scheduled Releases
-- There will be automated releases at 06:00 UTC on the 1 and 15th of every month via github-actions.
+- Automated releases at 06:00 UTC on the 1st and 15th of each month.
 
 ### Notes;
-- Apps and games in magisk hidelist/denylist will not able to access turnip driver
-- Make sure you are not using SkiaVK.
-- Turnip is compatible with these apps/games listed [here](list.md).
+- Root must be visible to target app/game.
+- Not compatible with android SkiaVK due to lack of shader caching.
+- Tested with these apps/games listed [here](list.md).
 
-### How to build locally?
-- Pick up the [turnip_builder.sh](https://raw.githubusercontent.com/ilhan-athn7/freedreno_turnip-CI/main/turnip_builder.sh)
-- You must be in a linux environment;
-- Open terminal and navigate to the directory of script and run this command ```sh turnip_builder.sh```
-- You can edit **turnip_builder.sh** to add a break or skip some steps, this is also a good way when you want to try something that is not merged in to mesa repository.
+### To Build Locally
+- Obtain the script [turnip_builder.sh](https://raw.githubusercontent.com/ilhan-athn7/freedreno_turnip-CI/main/turnip_builder.sh) on your linux environment. (visit the link and use ```CTRL + S``` keys)
+- Execute script on linux terminal ```bash ./turnip_builder.sh```
+- To build experimental branchs, change [this](https://github.com/ilhan-athn7/freedreno_turnip-CI/blob/c704685653879114860ce4cae9629a2511c6eeea/turnip_builder.sh#L50) line, and add one more line to rename unzipped folder to mesa-main.
 
 ### References
 
