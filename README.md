@@ -5,7 +5,7 @@ This is a bash script to build freedreno/turnip for android as a magisk module.
 
 ### Notes;
 - Root must be visible to target app/game.
-- Not compatible with android SkiaVK due to lack of shader caching.
+- Not compatible with android SkiaVK due to lack of ```VK_ANDROID_external_memory_android_hardware_buffer``` extension.
 - Tested with these apps/games listed [here](list.md).
 
 ### To Build Locally
