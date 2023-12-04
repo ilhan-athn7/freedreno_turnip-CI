@@ -67,19 +67,19 @@ build_lib_for_android(){
 	ndk="$workdir/$ndkver/toolchains/llvm/prebuilt/linux-x86_64/bin"
 
 	cat <<EOF >"android-aarch64"
-	[binaries]
-	ar = '$ndk/llvm-ar'
-	c = ['ccache', '$ndk/aarch64-linux-android$sdkver-clang']
-	cpp = ['ccache', '$ndk/aarch64-linux-android$sdkver-clang++', '-fno-exceptions', '-fno-unwind-tables', '-fno-asynchronous-unwind-tables', '-static-libstdc++']
-	c_ld = 'lld'
-	cpp_ld = 'lld'
-	strip = '$ndk/aarch64-linux-android-strip'
-	pkgconfig = ['env', 'PKG_CONFIG_LIBDIR=NDKDIR/pkgconfig', '/usr/bin/pkg-config']
-	[host_machine]
-	system = 'android'
-	cpu_family = 'aarch64'
-	cpu = 'armv8'
-	endian = 'little'
+[binaries]
+ar = '$ndk/llvm-ar'
+c = ['ccache', '$ndk/aarch64-linux-android$sdkver-clang']
+cpp = ['ccache', '$ndk/aarch64-linux-android$sdkver-clang++', '-fno-exceptions', '-fno-unwind-tables', '-fno-asynchronous-unwind-tables', '-static-libstdc++']
+c_ld = 'lld'
+cpp_ld = 'lld'
+strip = '$ndk/aarch64-linux-android-strip'
+pkgconfig = ['env', 'PKG_CONFIG_LIBDIR=NDKDIR/pkgconfig', '/usr/bin/pkg-config']
+[host_machine]
+system = 'android'
+cpu_family = 'aarch64'
+cpu = 'armv8'
+endian = 'little'
 EOF
 
 	echo "Generating build files ..." $'\n'
@@ -111,35 +111,35 @@ port_lib_for_magisk(){
 	mkdir -p "$meta"
 
 	cat <<EOF >"$meta/update-binary"
-	#################
-	# Initialization
-	#################
-	umask 022
-	ui_print() { echo "\$1"; }
-	OUTFD=\$2
-	ZIPFILE=\$3
-	. /data/adb/magisk/util_functions.sh
-	install_module
-	exit 0
+#################
+# Initialization
+#################
+umask 022
+ui_print() { echo "\$1"; }
+OUTFD=\$2
+ZIPFILE=\$3
+. /data/adb/magisk/util_functions.sh
+install_module
+exit 0
 EOF
 
 	cat <<EOF >"$meta/updater-script"
-	#MAGISK
+#MAGISK
 EOF
 
 	cat <<EOF >"module.prop"
-	id=turnip
-	name=turnip
-	version=v1.0
-	versionCode=1
-	author=MrMiy4mo
-	description=Turnip is an open-source vulkan driver for devices with adreno GPUs.
+id=turnip
+name=turnip
+version=v1.0
+versionCode=1
+author=MrMiy4mo
+description=Turnip is an open-source vulkan driver for devices with adreno GPUs.
 EOF
 
 	cat <<EOF >"customize.sh"
-	set_perm_recursive \$MODPATH/system 0 0 755 u:object_r:system_file:s0
-	set_perm_recursive \$MODPATH/system/vendor 0 2000 755 u:object_r:vendor_file:s0
-	set_perm \$MODPATH/$p1/vulkan.adreno.so 0 0 0644 u:object_r:same_process_hal_file:s0
+set_perm_recursive \$MODPATH/system 0 0 755 u:object_r:system_file:s0
+set_perm_recursive \$MODPATH/system/vendor 0 2000 755 u:object_r:vendor_file:s0
+set_perm \$MODPATH/$p1/vulkan.adreno.so 0 0 0644 u:object_r:same_process_hal_file:s0
 EOF
 
 	echo "Copy necessary files from work directory ..." $'\n'
