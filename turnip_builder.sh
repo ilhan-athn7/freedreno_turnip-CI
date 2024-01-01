@@ -2,11 +2,13 @@
 green='\033[0;32m'
 red='\033[0;31m'
 nocolor='\033[0m'
+
 deps="meson ninja patchelf unzip curl pip flex bison zip"
 workdir="$(pwd)/turnip_workdir"
 magiskdir="$workdir/turnip_module"
 ndkver="android-ndk-r26b"
 sdkver="31"
+mesasrc="https://gitlab.freedesktop.org/mesa/mesa/-/archive/main/mesa-main.zip"
 clear
 
 # there are 4 functions here, simply comment to disable.
@@ -53,7 +55,7 @@ prepare_workdir(){
 	unzip "$ndkver"-linux.zip  &> /dev/null
 
 	echo "Downloading mesa source (~30 MB) ..." $'\n'
-	curl https://gitlab.freedesktop.org/mesa/mesa/-/archive/main/mesa-main.zip --output mesa-main.zip &> /dev/null
+	curl "$mesasrc" --output mesa-main.zip &> /dev/null
 	###
 	echo "Exracting mesa source to a folder ..." $'\n'
 	unzip mesa-main.zip &> /dev/null
