@@ -32,7 +32,7 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         body: Turnip magisk module
-        tag_name: workflow_${{github.run_number}}
-        name: Release ${{github.run_number}}
+        tag_name: github_run
+        name: Weekly Action Release
         files: |
            turnip_workdir/turnip.zip
