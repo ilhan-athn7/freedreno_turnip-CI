@@ -22,6 +22,9 @@ run_all(){
 
 
 check_deps(){
+	sudo apt remove meson
+	pip install meson
+
 	echo "Checking system for required Dependencies ..."
 	for deps_chk in $deps;
 		do
