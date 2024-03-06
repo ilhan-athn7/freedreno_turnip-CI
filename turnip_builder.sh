@@ -54,7 +54,7 @@ prepare_workdir(){
 	echo "Exracting android-ndk to a folder ..." $'\n'
 	unzip "$ndkver"-linux.zip  &> /dev/null
 
-	echo "Downloading mesa source (~30 MB) ..." $'\n'
+	echo "Downloading mesa source (~50 MB) ..." $'\n'
 	curl "$mesasrc" --output mesa-main.zip &> /dev/null
 	###
 	echo "Exracting mesa source to a folder ..." $'\n'

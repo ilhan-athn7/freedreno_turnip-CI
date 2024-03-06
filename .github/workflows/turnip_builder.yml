@@ -16,7 +16,10 @@ jobs:
         sudo sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list
         sudo apt update
         sudo apt build-dep mesa -y
-    
+        sudo sed -i 's/jammy/mantic/g' /etc/apt/sources.list
+        sudo apt update
+        sudo apt install meson
+
     - name: Execute build script
       run: bash ./turnip_builder.sh
 
@@ -27,7 +30,7 @@ jobs:
         path: |
           turnip_workdir/ninja_log
           turnip_workdir/mesa-main/build-android-aarch64/meson-logs/meson-log.txt
-      
+
     - name: Release "turnip"
       uses: softprops/action-gh-release@v1
       with:
