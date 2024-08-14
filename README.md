@@ -1,11 +1,16 @@
-This is a bash script to build freedreno/turnip for android as a magisk module.
+This is a bash script to build freedreno/turnip for android as a magisk module and an Adreno Tools driver package.
 
 ### Scheduled Releases
 - Automated releases at 06:00 UTC on the 1st and 15th of each month.
 
 ### Notes;
+
+#### Magisk build:
 - Root must be visible to target app/game.
 - Tested with these apps/games listed [here](list.md).
+
+#### Adreno Tools build:
+- Follow application specific instructions to install the driver package.
 
 ### To Build Locally
 - Obtain the script [turnip_builder.sh](https://raw.githubusercontent.com/ilhan-athn7/freedreno_turnip-CI/main/turnip_builder.sh) on your linux environment. (visit the link and use ```CTRL + S``` keys)
@@ -17,3 +22,5 @@ This is a bash script to build freedreno/turnip for android as a magisk module.
 - https://forum.xda-developers.com/t/getting-freedreno-turnip-mesa-vulkan-driver-on-a-poco-f3.4323871/
 
 - https://gitlab.freedesktop.org/mesa/mesa/-/issues/6802
+
+- https://github.com/bylaws/libadrenotools

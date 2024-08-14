@@ -34,8 +34,9 @@ jobs:
     - name: Release "turnip"
       uses: softprops/action-gh-release@v1
       with:
-        body: Turnip magisk module
+        body: Turnip magisk module and driver package for adrenotools
         tag_name: github_run
         name: Weekly Action Release
         files: |
            turnip_workdir/turnip.zip
+           turnip_workdir/turnip_adrenotools.zip
