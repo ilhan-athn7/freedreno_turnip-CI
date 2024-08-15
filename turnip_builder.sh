@@ -133,7 +133,7 @@ EOF
 	cat <<EOF >"module.prop"
 id=turnip
 name=turnip
-version=$(cat mesa-main/VERSION)
+version=$(cat $workdir/mesa-main/VERSION)
 versionCode=1
 author=MrMiy4mo
 description=Turnip is an open-source vulkan driver for devices with adreno GPUs.
@@ -171,7 +171,7 @@ port_lib_for_adrenotools(){
 	"author": "MrMiy4mo, kethen",
 	"packageVersion": "1",
 	"vendor": "Mesa",
-	"driverVersion": "$(cat mesa-main/VERSION)",
+	"driverVersion": "$(cat $workdir/mesa-main/VERSION)",
 	"minApi": $sdkver,
 	"libraryName": "$libname"
 }
