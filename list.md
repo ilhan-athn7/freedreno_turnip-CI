@@ -6,7 +6,7 @@
 | GRID™ Autosport                                 | ✅     | Tested by [V3KT0R-87](//github.com/V3KT0R-87)                                                                             |
 | SpongeBob SquarePants Battle For Bikini Bottom  | ✅     | Tested by [V3KT0R-87](//github.com/V3KT0R-87)<br>Poor performance.                                                        |
 | Carx Street                                     | ✅     | Tested by [V3KT0R-87](//github.com/V3KT0R-87)                                                                             |
-| MMJR2 Dolphin Emulator                          | ⚠️      | Tested by [V3KT0R-87](//github.com/V3KT0R-87)<br>Texture bug.                                                             |
+| Dolphin Emulator                                | ✅     | Tested by [V3KT0R-87](//github.com/V3KT0R-87)<br>                                                                         |
 | PPSSPP                                          | ✅     | Tested by [V3KT0R-87](//github.com/V3KT0R-87)                                                                             |
 | EggNS                                           | ✅     | Tested by [V3KT0R-87](//github.com/V3KT0R-87)<br>Poor performance.                                                        |
 | ANGLE (com.android.angle)                       | ✅     |                                                                                                                           |
@@ -15,3 +15,4 @@
 | TauCeti Vulkan Technology Benchmark             | ✅     | Poor performance.                                                                                                         |
 | COD Warzone                                     | ✅     | Poor performance, The game map initialized with Black and White colors and textures getting loaded in several minutes.    |
 | GTA Trilogy - Definitive Edition                | ✅     | Tested by [@V3KT0R-87](//github.com/V3KT0R-87)<br>Working, Poor Performance.                                              |
+| Hitman Blood Money : Reprisal                   | ✅     | Tested by [@V3KT0R-87](//github.com/V3KT0R-87)<br>Working, 60 fps Medium Graphics.                                        |
