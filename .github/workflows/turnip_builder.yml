@@ -7,18 +7,15 @@ on:
 
 jobs:
   start_building_turnip:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
     - uses: actions/checkout@v3
 
     - name: Prepare environment
       run: |
-        sudo sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list
+        sudo sed -i 's/^Types: deb$/Types: deb deb-src/' /etc/apt/sources.list.d/ubuntu.sources
         sudo apt update
         sudo apt build-dep mesa -y
-        sudo sed -i 's/jammy/mantic/g' /etc/apt/sources.list
-        sudo apt update
-        sudo apt install meson
 
     - name: Execute build script
       run: bash ./turnip_builder.sh
