@@ -2,13 +2,13 @@
 green='\033[0;32m'
 red='\033[0;31m'
 nocolor='\033[0m'
-
 deps="meson ninja patchelf unzip curl pip flex bison zip"
 workdir="$(pwd)/turnip_workdir"
 magiskdir="$workdir/turnip_module"
 ndkver="android-ndk-r27c"
-sdkver="27"
+sdkver="30" 
 mesasrc="https://gitlab.freedesktop.org/mesa/mesa/-/archive/main/mesa-main.zip"
+
 clear
 
 # there are 4 functions here, simply comment to disable.
@@ -64,20 +64,42 @@ prepare_workdir(){
 }
 
 
+build_lib_for_android() {
+	echo "Creating Meson cross file ..." $'\n'
 
-build_lib_for_android(){
-	echo "Creating meson cross file ..." $'\n'
 	ndk="$workdir/$ndkver/toolchains/llvm/prebuilt/linux-x86_64/bin"
 
-	cat <<EOF >"android-aarch64"
+	export CC=clang
+	export CXX=clang++
+	export AR=llvm-ar
+	export RANLIB=llvm-ranlib
+   	export STRIP=llvm-strip
+   	export OBJDUMP=llvm-objdump
+   	export OBJCOPY=llvm-objcopy
+  	export LDFLAGS="-fuse-ld=lld"
+
+    	# Create a temporary directory for fake cc/c++
+    	mkdir -p /tmp/fake-cc
+
+    	# Create symbolic links to NDK-Clang
+    	ln -sf "$ndk/clang" /tmp/fake-cc/cc
+    	ln -sf "$ndk/clang++" /tmp/fake-cc/c++
+
+    	# Prepend both fake-cc and NDK bin to PATH
+    	export PATH="/tmp/fake-cc:$ndk:$PATH"
+
+    	echo "Creating Meson cross file..." $'\n'
+
+    	cat <<EOF >"android-aarch64.txt"
 [binaries]
 ar = '$ndk/llvm-ar'
 c = ['ccache', '$ndk/aarch64-linux-android$sdkver-clang']
-cpp = ['ccache', '$ndk/aarch64-linux-android$sdkver-clang++', '-fno-exceptions', '-fno-unwind-tables', '-fno-asynchronous-unwind-tables', '-static-libstdc++']
-c_ld = 'lld'
-cpp_ld = 'lld'
+cpp = ['ccache', '$ndk/aarch64-linux-android$sdkver-clang++', '-fno-exceptions', '-fno-unwind-tables', '-fno-asynchronous-unwind-tables', '-static-libstdc++', '-Wno-error=c++11-narrowing']
+c_ld = '$ndk/ld.lld'
+cpp_ld = '$ndk/ld.lld'
 strip = '$ndk/aarch64-linux-android-strip'
-pkg-config = ['env', 'PKG_CONFIG_LIBDIR=NDKDIR/pkg-config', '/usr/bin/pkg-config']
+pkg-config = ['env', 'PKG_CONFIG_LIBDIR=$ndk/pkg-config', '/usr/bin/pkg-config']
+
 [host_machine]
 system = 'android'
 cpu_family = 'aarch64'
@@ -85,14 +107,45 @@ cpu = 'armv8'
 endian = 'little'
 EOF
 
-	echo "Generating build files ..." $'\n'
-	meson setup build-android-aarch64 --cross-file "$workdir"/mesa-main/android-aarch64 -Dbuildtype=release -Dplatforms=android -Dplatform-sdk-version=$sdkver -Dandroid-stub=true -Dgallium-drivers= -Dvulkan-drivers=freedreno -Dvulkan-beta=true -Dfreedreno-kmds=kgsl -Db_lto=true -Dstrip=true &> "$workdir"/meson_log
+    cat <<EOF >"native.txt"
+[build_machine]
+c = ['ccache', 'clang']
+cpp = ['ccache', 'clang++']
+ar = 'llvm-ar'
+strip = 'llvm-strip'
+c_ld = 'ld.lld'
+cpp_ld = 'ld.lld'
+system = 'linux'
+cpu_family = 'x86_64'
+cpu = 'x86_64'
+endian = 'little'
+EOF
 
-	echo "Compiling build files ..." $'\n'
-	ninja -C build-android-aarch64 &> "$workdir"/ninja_log
+    echo "Generating build files ..." $'\n'
+    meson setup build-android-aarch64 \
+        --cross-file "android-aarch64.txt" \
+        --native-file "native.txt" \
+        -Dbuildtype=release \
+        -Dplatforms=android \
+        -Dplatform-sdk-version="$sdkver" \
+        -Dandroid-stub=true \
+        -Dgallium-drivers= \
+        -Dvulkan-drivers=freedreno \
+        -Dvulkan-beta=true \
+        -Dfreedreno-kmds=kgsl \
+        -Db_lto=true \
+        -Dstrip=true &> "$workdir/meson_log"
+
+    	echo "Compiling build files ..." $'\n'
+
+    	ninja -C build-android-aarch64 &> "$workdir/ninja_log"
+
+	# Clean up fake-cc directory and symbolic links made for clang on exit
+    	rm -rf /tmp/fake-cc/cc
+    	rm -rf /tmp/fake-cc/c++
+    	rm -rf /tmp/fake-cc
+
 }
-
-
 
 port_lib_for_magisk(){
 	echo "Using patchelf to match soname ..."  $'\n'
