@@ -1,6 +1,6 @@
 | Name                                            | Status | Notes                                                                                                                     |
 |-------------------------------------------------|--------|---------------------------------------------------------------------------------------------------------------------------|
-| Genshin Impact                                  | ✅     | Edit `vulkan_gpu_list_config.txt` for vulkan.<br>May crash or display glitches on certain version.<br>Poor performance.   |
+| Genshin Impact                                  | ✅     | MiHoYo has announced official vulkan support for several high end GPU models listed in `vulkan_gpu_list_config.txt`       |
 | Fortnite Mobile                                 | ✅     | Fortnite uses Vulkan by default on supported devices since UE5 upgrade.                                                   |
 | 3D Mark                                         | ✅     |                                                                                                                           |
 | GRID™ Autosport                                 | ✅     | Tested by [V3KT0R-87](//github.com/V3KT0R-87)                                                                             |
