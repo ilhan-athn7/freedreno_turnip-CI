@@ -175,8 +175,8 @@ description=Turnip is an open-source vulkan driver for devices with adreno GPUs.
 EOF
 
 		cat <<EOF >"customize.sh"
-set_perm_recursive $MODPATH/system 0 0 0755 0644
-set_perm $MODPATH/system/vendor/lib64/hw/vulkan.adreno.so 0 0 0644
+set_perm_recursive \$MODPATH/system 0 0 0755 0644
+set_perm \$MODPATH/system/vendor/lib64/hw/vulkan.adreno.so 0 0 0644
 EOF
 
 	echo "Copy necessary files from work directory ..." $'\n'
