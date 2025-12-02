@@ -179,6 +179,17 @@ debug.hwui.renderer=skiagl
 ro.hardware.vulkan=turnip
 EOF
 
+		cat <<EOF >"action.sh"
+if getprop ro.hardware.vulkan | grep -q "adreno"; then
+    resetprop ro.hardware.vulkan turnip
+    log_message "Turnip is set as current vulkan driver."
+else if getprop ro.hardware.vulkan | grep -q "turnip"; then
+    resetprop ro.hardware.vulkan adreno
+    log_message "Adreno is set as current vulkan driver."
+fi
+sleep 10
+EOF
+
 		cat <<EOF >"customize.sh"
 set_perm_recursive \$MODPATH/system 0 0 0755 0644
 set_perm \$MODPATH/system/vendor/lib64/hw/vulkan.adreno.so 0 0 0644
