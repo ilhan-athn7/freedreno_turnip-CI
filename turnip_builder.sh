@@ -137,8 +137,8 @@ port_lib_for_magisk(){
 	echo "Using patchelf to match soname ..." $'\n'
 		cp "$workdir"/mesa-main/build-android-aarch64/src/freedreno/vulkan/libvulkan_freedreno.so "$workdir"
 		cd "$workdir"
-		patchelf --set-soname vulkan.adreno.so libvulkan_freedreno.so
-		mv libvulkan_freedreno.so vulkan.adreno.so
+		patchelf --set-soname vulkan.turnip.so libvulkan_freedreno.so
+		mv libvulkan_freedreno.so vulkan.turnip.so
 
 	echo "Prepare magisk module structure ..." $'\n'
 		p1="system/vendor/lib64/hw"
@@ -172,6 +172,11 @@ version=$(cat $workdir/mesa-main/VERSION)
 versionCode=1
 author=MrMiy4mo
 description=Turnip is an open-source vulkan driver for devices with adreno GPUs.
+EOF
+
+		cat <<EOF >"system.prop"
+debug.hwui.renderer=skiagl
+ro.hardware.vulkan=turnip
 EOF
 
 		cat <<EOF >"customize.sh"
