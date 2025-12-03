@@ -28,7 +28,7 @@ jobs:
           "versionCode": "$(cat turnip_workdir/mesa-main/VERSION | tr -cd '0-9')",
           "version": "$(cat turnip_workdir/mesa-main/VERSION)",
           "zipUrl": "https://github.com/ilhan-athn7/freedreno_turnip-CI/releases/download/github_run/turnip.zip",
-          "changelog": "https://gitlab.freedesktop.org/mesa/mesa/-/commits/main?ref_type=heads"
+          "changelog": "https://raw.githubusercontent.com/ilhan-athn7/freedreno_turnip-CI/refs/heads/main/changelog.md"
         }
 
     - name: Upload a Build Artifact
