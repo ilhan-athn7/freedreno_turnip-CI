@@ -51,12 +51,12 @@ prepare_workdir(){
 
 	echo "Downloading android-ndk from google server ..." $'\n'
 		curl https://dl.google.com/android/repository/"$ndkver"-linux.zip --output "$ndkver"-linux.zip &> /dev/null
-	echo "Exracting android-ndk ..." $'\n'
+	echo "Extracting android-ndk ..." $'\n'
 		unzip "$ndkver"-linux.zip &> /dev/null
 
 	echo "Downloading mesa source ..." $'\n'
 		curl "$mesasrc" --output mesa-main.zip &> /dev/null
-	echo "Exracting mesa source ..." $'\n'
+	echo "Extracting mesa source ..." $'\n'
 		unzip mesa-main.zip &> /dev/null
 		cd mesa-main
 }
@@ -172,6 +172,7 @@ version=$(cat $workdir/mesa-main/VERSION)
 versionCode=1
 author=MrMiy4mo
 description=Turnip is an open-source vulkan driver for devices with adreno GPUs.
+updateJson=https://github.com/ilhan-athn7/freedreno_turnip-CI/releases/download/github_run/update.json
 EOF
 
 		cat <<EOF >"system.prop"
@@ -180,23 +181,24 @@ ro.hardware.vulkan=turnip
 EOF
 
 		cat <<EOF >"action.sh"
+#!/system/bin/sh
 if getprop ro.hardware.vulkan | grep -q "adreno"; then
     resetprop ro.hardware.vulkan turnip
-    log_message "Turnip is set as current vulkan driver."
-else if getprop ro.hardware.vulkan | grep -q "turnip"; then
+    echo "Turnip is set as current vulkan driver."
+else
     resetprop ro.hardware.vulkan adreno
-    log_message "Adreno is set as current vulkan driver."
+    echo "Adreno is set as current vulkan driver."
 fi
 sleep 10
 EOF
 
 		cat <<EOF >"customize.sh"
 set_perm_recursive \$MODPATH/system 0 0 0755 0644
-set_perm \$MODPATH/system/vendor/lib64/hw/vulkan.adreno.so 0 0 0644
+set_perm \$MODPATH/system/vendor/lib64/hw/vulkan.turnip.so 0 0 0644
 EOF
 
 	echo "Copy necessary files from work directory ..." $'\n'
-		cp "$workdir"/vulkan.adreno.so "$magiskdir"/"$p1"
+		cp "$workdir"/vulkan.turnip.so "$magiskdir"/"$p1"
 
 	echo "Packing files in to magisk module ..." $'\n'
 		zip -r "$workdir"/turnip.zip ./* &> /dev/null
