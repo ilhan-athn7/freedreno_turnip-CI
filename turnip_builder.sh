@@ -169,7 +169,7 @@ EOF
 id=turnip
 name=turnip
 version=$(cat $workdir/mesa-main/VERSION)
-versionCode=1
+versionCode=$(cat $workdir/mesa-main/VERSION | tr -cd '0-9')
 author=MrMiy4mo
 description=Turnip is an open-source vulkan driver for devices with adreno GPUs.
 updateJson=https://github.com/ilhan-athn7/freedreno_turnip-CI/releases/download/github_run/update.json
