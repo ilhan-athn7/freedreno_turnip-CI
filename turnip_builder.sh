@@ -120,7 +120,8 @@ EOF
 			-Dvulkan-drivers=freedreno \
 			-Dvulkan-beta=true \
 			-Dfreedreno-kmds=kgsl \
-			-Db_lto=false \
+			-Db_lto=true \
+			-Dallow-broken-lto=true \
 			-Dstrip=true \
 			-Degl=disabled &> "$workdir/meson_log"
 
