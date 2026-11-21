@@ -37,14 +37,6 @@ jobs:
         path: |
           turnip_workdir/ninja_log
           turnip_workdir/mesa-main/build-android-aarch64/meson-logs/meson-log.txt
-
-    - name: Release "turnip"
-      uses: softprops/action-gh-release@v1
-      with:
-        body: Turnip magisk module and driver package for adrenotools
-        tag_name: github_run
-        name: Weekly Action Release
-        files: |
-           turnip_workdir/update.json
-           turnip_workdir/turnip.zip
-           turnip_workdir/turnip_adrenotools.zip
+          turnip_workdir/update.json
+          turnip_workdir/turnip.zip
+          turnip_workdir/turnip_adrenotools.zip
