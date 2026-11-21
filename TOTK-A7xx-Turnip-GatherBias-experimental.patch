@@ -1,0 +1,66 @@
+--- a/src/freedreno/ir3/ir3_nir.c
++++ b/src/freedreno/ir3/ir3_nir.c
+@@ -748,6 +748,52 @@
+       nir_metadata_control_flow, NULL);
+ }
+ 
++/* Experimental workaround for gather-coordinate sub-texel rounding on Adreno 7xx.
++ * Apply a positive half-step (1/512 texel for 8-bit sub-texel precision) to
++ * normalized 2D, non-array, non-shadow texture gathers.  This is intentionally
++ * limited to TG4 and does not modify ordinary texture sampling.
++ */
++static bool
++ir3_nir_gather_bias_cb(struct nir_builder *b, nir_instr *instr, void *data)
++{
++   if (instr->type != nir_instr_type_tex)
++      return false;
++
++   nir_tex_instr *tex = nir_instr_as_tex(instr);
++   if (tex->op != nir_texop_tg4 ||
++       tex->sampler_dim != GLSL_SAMPLER_DIM_2D ||
++       tex->is_array || tex->is_shadow || tex->coord_components != 2)
++      return false;
++
++   int coord_idx = nir_tex_instr_src_index(tex, nir_tex_src_coord);
++   if (coord_idx < 0)
++      return false;
++
++   nir_def *coord = tex->src[coord_idx].src.ssa;
++   if (coord->bit_size != 32)
++      return false;
++
++   b->cursor = nir_before_instr(&tex->instr);
++
++   nir_def *size = nir_build_texture_query(b, tex, nir_texop_txs, 2,
++                                           nir_type_uint32, false, true);
++   nir_def *size_f = nir_u2fN(b, size, 32);
++   nir_def *bias = nir_fdiv(b, nir_imm_vec2(b, 1.0f / 512.0f,
++                                             1.0f / 512.0f), size_f);
++   nir_def *biased_coord = nir_fadd(b, coord, bias);
++   nir_src_rewrite(&tex->src[coord_idx].src, biased_coord);
++
++   return true;
++}
++
++
++static bool
++ir3_nir_gather_bias_workaround(nir_shader *shader)
++{
++   return nir_shader_tex_pass(shader, ir3_nir_gather_bias_cb,
++                             nir_metadata_control_flow, NULL);
++}
++
+ void
+ ir3_finalize_nir(struct ir3_compiler *compiler,
+                  const struct ir3_shader_nir_options *options,
+@@ -811,6 +857,10 @@
+ 
+    NIR_PASS(_, s, nir_lower_frexp);
+    NIR_PASS(_, s, nir_lower_amul, ir3_glsl_type_size);
++
++   /* Experimental TOTK gather rounding workaround for Adreno 7xx only. */
++   if (compiler->gen == 7)
++      NIR_PASS(_, s, ir3_nir_gather_bias_workaround);
+ 
+    OPT(s, nir_lower_tex, &tex_options);
+    OPT(s, nir_lower_load_const_to_scalar);
