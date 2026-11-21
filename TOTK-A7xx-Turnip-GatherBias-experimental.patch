@@ -1,7 +1,7 @@
 --- a/src/freedreno/ir3/ir3_nir.c
 +++ b/src/freedreno/ir3/ir3_nir.c
-@@ -748,6 +748,52 @@
-       nir_metadata_control_flow, NULL);
+@@ -740,6 +740,47 @@
+    return true;
  }
  
 +/* Experimental workaround for gather-coordinate sub-texel rounding on Adreno 7xx.
@@ -10,12 +10,8 @@
 + * limited to TG4 and does not modify ordinary texture sampling.
 + */
 +static bool
-+ir3_nir_gather_bias_cb(struct nir_builder *b, nir_instr *instr, void *data)
++ir3_nir_gather_bias_cb(struct nir_builder *b, nir_tex_instr *tex, void *data)
 +{
-+   if (instr->type != nir_instr_type_tex)
-+      return false;
-+
-+   nir_tex_instr *tex = nir_instr_as_tex(instr);
 +   if (tex->op != nir_texop_tg4 ||
 +       tex->sampler_dim != GLSL_SAMPLER_DIM_2D ||
 +       tex->is_array || tex->is_shadow || tex->coord_components != 2)
@@ -42,7 +38,6 @@
 +   return true;
 +}
 +
-+
 +static bool
 +ir3_nir_gather_bias_workaround(nir_shader *shader)
 +{
@@ -50,10 +45,10 @@
 +                             nir_metadata_control_flow, NULL);
 +}
 +
- void
- ir3_finalize_nir(struct ir3_compiler *compiler,
-                  const struct ir3_shader_nir_options *options,
-@@ -811,6 +857,10 @@
+ static bool
+ ir3_nir_min_lod_workaround(nir_shader *shader)
+ {
+@@ -811,6 +852,10 @@
  
     NIR_PASS(_, s, nir_lower_frexp);
     NIR_PASS(_, s, nir_lower_amul, ir3_glsl_type_size);
