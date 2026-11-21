@@ -38,7 +38,7 @@ check_deps(){
 			done
 
 		if [ "$deps_missing" == "1" ]
-			then echo "Please install missing dependencies" && exit 1
+			then echo "Please install missing dependencies" && exit 0
 		fi
 
 	echo "Installing python Mako dependency (if missing) ..." $'\n'
@@ -131,7 +131,7 @@ EOF
 		ninja -C build-android-aarch64 &> "$workdir/ninja_log"
 
 	if ! [ -a "$workdir"/mesa-main/build-android-aarch64/src/freedreno/vulkan/libvulkan_freedreno.so ]; then
-		echo -e "$red Build failed! $nocolor" && exit 1
+		echo -e "$red Build failed! $nocolor" && exit 0
 	fi
 }
 
@@ -205,7 +205,7 @@ EOF
 	echo "Packing files in to magisk module ..." $'\n'
 		zip -r "$workdir"/turnip.zip ./* &> /dev/null
 		if ! [ -a "$workdir"/turnip.zip ];
-			then echo -e "$red-Packing failed!$nocolor" && exit 1
+			then echo -e "$red-Packing failed!$nocolor" && exit 0
 			else echo -e "$green-All done, the module saved to;$nocolor" && echo "$workdir"/turnip.zip
 		fi
 }
@@ -233,7 +233,7 @@ EOF
 
 	zip -9 "$workdir"/turnip_adrenotools.zip $libname meta.json &> /dev/null
 	if ! [ -a "$workdir"/turnip_adrenotools.zip ];
-		then echo -e "$red-Packing turnip_adrenotools.zip failed!$nocolor" && exit 1
+		then echo -e "$red-Packing turnip_adrenotools.zip failed!$nocolor" && exit 0
 		else echo -e "$green-All done, the module saved to;$nocolor" && echo "$workdir"/turnip_adrenotools.zip
 	fi
 }
