@@ -59,7 +59,7 @@ prepare_workdir(){
 	echo "Extracting mesa source ..." $'\n'
 		unzip mesa-main.zip &> /dev/null
 		cd mesa-main
-		patch -p1 < ../../TOTK-A7xx-Turnip-GatherBias-experimental.patch
+		patch -p1 < ../../TOTK-A7xx-Turnip-GatherBias-single.patch
 }
 
 
