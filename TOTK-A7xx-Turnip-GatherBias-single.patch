@@ -1,13 +1,11 @@
 --- a/src/freedreno/ir3/ir3_nir.c
 +++ b/src/freedreno/ir3/ir3_nir.c
-@@ -740,6 +740,54 @@
-    return true;
- }
- 
-+/* Experimental workaround for gather-coordinate sub-texel rounding on Adreno 7xx.
-+ * Apply a positive half-step (1/512 texel for 8-bit sub-texel precision) to
-+ * normalized 2D, non-array, non-shadow texture gathers.  This is intentionally
-+ * limited to TG4 and does not modify ordinary texture sampling.
+@@ -718,6 +718,44 @@
+  * clamp min_lod to levelCount - 1 and get the same result while avoiding the
+  * hardware bug.
+  */
++/* Experimental TOTK gather rounding workaround for Adreno 7xx.
++ * Bias normalized 2D gathers by 1/512 texel, without affecting other tex ops.
 + */
 +static bool
 +ir3_nir_gather_bias_cb(struct nir_builder *b, nir_tex_instr *tex, void *data)
@@ -26,42 +24,35 @@
 +      return false;
 +
 +   b->cursor = nir_before_instr(&tex->instr);
-+
 +   nir_def *size = nir_build_texture_query(b, tex, nir_texop_txs, 2,
 +                                           nir_type_uint32, false, true);
 +   nir_def *size_f = nir_u2fN(b, size, 32);
-+   nir_def *bias = nir_fdiv(b, nir_imm_vec2(b, 1.0f / 512.0f,
-+                                             1.0f / 512.0f), size_f);
++   nir_def *inv_size = nir_frcp(b, size_f);
++   nir_def *bias = nir_fmul(b, nir_imm_vec2(b, 1.0f / 512.0f,
++                                              1.0f / 512.0f), inv_size);
 +   nir_def *biased_coord = nir_fadd(b, coord, bias);
 +   nir_src_rewrite(&tex->src[coord_idx].src, biased_coord);
-+
 +   return true;
 +}
 +
 +static bool
 +ir3_nir_gather_bias_workaround(nir_shader *shader)
 +{
-+   /* Gather-coordinate bias is only intended for fragment sampling. Applying it
-+    * to gathers in other shader stages can perturb unrelated calculations and
-+    * needlessly add texture queries to those stages. */
-+   if (shader->info.stage != MESA_SHADER_FRAGMENT)
-+      return false;
-+
 +   return nir_shader_tex_pass(shader, ir3_nir_gather_bias_cb,
 +                             nir_metadata_control_flow, NULL);
 +}
 +
  static bool
- ir3_nir_min_lod_workaround(nir_shader *shader)
+ ir3_nir_min_lod_workaround_cb(struct nir_builder *b, nir_tex_instr *tex, void *_data)
  {
-@@ -811,6 +858,10 @@
- 
+@@ -812,6 +850,10 @@
     NIR_PASS(_, s, nir_lower_frexp);
     NIR_PASS(_, s, nir_lower_amul, ir3_glsl_type_size);
-+
-+   /* Experimental TOTK gather rounding workaround for Adreno 7xx only. */
+ 
++   /* Experimental TOTK gather rounding workaround, Adreno 7xx only. */
 +   if (compiler->gen == 7)
 +      NIR_PASS(_, s, ir3_nir_gather_bias_workaround);
- 
++
     OPT(s, nir_lower_tex, &tex_options);
     OPT(s, nir_lower_load_const_to_scalar);
+ 
